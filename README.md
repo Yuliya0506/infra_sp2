@@ -38,35 +38,85 @@ docker-compose exec web python manage.py createsuperuser
 
 ## Загрузка тестовых данных
 В репозитории, в директории /api_yamdb/static/data, находятся несколько файлов в формате csv с контентом для ресурсов Users, Titles, Categories, Genres, Review и Comments.
-Залить данные из файлов csv в БД можно, импортировав данные командой: python manage.py import_csv
+* Залить данные из файлов csv в БД можно, импортировав данные командой:
+python manage.py import_csv
+* Можно восстановить базу данных из файла infra_sp2/infra/nginx/fixtures.json командой
+docker-compose exec web python manage.py loaddata fixtures.json
 
 ## Примеры
 Пользователь аутентифицируется посредством сервиса Simple JWT.
 * Получите код подтверждения регистрации.
 * Отправьте POST запрос с именем пользователя и e-mail на эндпойнт:
-
 http://127.0.0.1:8000/api/v1/auth/signup/
+
+Пример успешного ответа:
+{
+    "username": "YulyaGalo",
+    "email": "ygalieva00@gmail.com"
+}
 
 * Получите токен для доступа к функциям сервиса проекта. 
 Отправьте POST запрос с именем пользователя и полученным по e-mail кодом подтвреждения на эндпойнт:
-
 http://127.0.0.1:8000/api/v1/auth/token/
 
-* Можно заполнить пустые поля в своем профайле, отправив PATCH запрос на эндпойнт:
+POST request:
 
+{
+    "username": "YulyaGalo",
+    "confirmation_code": "9134d504-1e4c-40f1-81a5-b3baf357e3e3"
+}
+
+Response:
+
+{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlb90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1OTc4OTAwOSwiaWF0IjoxNjU4MDYxMDA5LCJqdGkiOiJkNTUyNTJlODQ0OGI0MDExYjFjOGYwZDYxOGU2ZjAxZCIsInVzZXJfaWQiOjF9.IVjgYCbZiQ_kdraTYIz4VdYYpZoh7kTMxpmjjJ1tkIg",
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlb90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU4OTI1MDA5LCJpYXQiOjE2NTgwNjEwMDksImp0aSI6ImIzZDViMmY2YjExZjQxMTM4NTk1NWVmMzg5NmZmM2JkIiwidXNlcl9pZCI6MX0.dEfpwO3ZBA62R6lH6ybHx3KxCZU9PgQCoXvaEsl5UyI"
+}
+
+* Можно заполнить пустые поля в своем профайле, отправив PATCH запрос на эндпойнт:
 http://127.0.0.1:8000/api/v1/users/me/
 
-* Получение списка произведений GET запрос:
-
-http://127.0.0.1:8000/api/v1/titles/
+{
+    "username": "booklover",
+    "email": "ygalieva00@gmail.com",
+    "role": "user",
+    "bio": "My biography.",
+    "first_name": "Yulya",
+    "last_name": "Galieva"
+}
 
 * Получение информации о произведении GET запрос:
 
 http://127.0.0.1:8000/api/v1/titles/{titles_id}/
 
-* Создать отзыв о произведении POST запрос:
+Response:
 
-http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
+{
+    "id": 5,
+    "rating": 5,
+    "genre": [
+        {
+            "name": "Комедия",
+            "slug": "comedy"
+        },
+        {
+            "name": "Детектив",
+            "slug": "detective"
+        },
+        {
+            "name": "Триллер",
+            "slug": "thriller"
+        }
+    ],
+    "category": {
+        "name": "Фильм",
+        "slug": "movie"
+    },
+    "name": "Криминальное чтиво",
+    "year": 1994,
+    "description": null
+}
+
 
 ### В проекте использованы технологии:
 - Python
