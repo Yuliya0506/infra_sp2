@@ -10,7 +10,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'set_your_secret_key_in_.env_file')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
@@ -106,7 +105,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 
 STATIC_URL = '/static/'
